@@ -23,7 +23,7 @@ class Main{
             do{
                 System.out.print("Enter coord of piece to move(a1,b2...):");
                 current = in.nextLine();
-            }while((board.scanPos(current)) == null);
+            }while((board.scanPos(current) == null));
             
             
             System.out.print("Enter new position (a1,b2...):");
