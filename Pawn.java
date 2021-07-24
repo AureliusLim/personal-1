@@ -3,7 +3,17 @@ public class Pawn extends Piece {
         super(identifier, team, x, y);
     }
     @Override
-    public boolean move(String before, String after){
+    public boolean move(int beforeX, int beforeY, int afterX, int afterY){
+        
+        if ( (this.team == 'W' && afterY == beforeY + 1) || (this.team == 'B' && afterY == beforeY - 1) ){
+            if(afterX == beforeX + 1 || afterX == beforeX - 1){
+                //eat
+            }
+            this.x = (char)(afterX + 97);
+            this.y = (char)(afterY);
+            return true;
+        }
+        
         return false;
     }
     @Override

@@ -13,7 +13,8 @@ abstract class Piece{
         this.eaten = false;
     }
     abstract public void eat(Piece x);
-    abstract public boolean move(String before, String after);
+    abstract boolean move(int beforeX, int beforeY, int afterX, int afterY);
+
     public char getTeam(){
         return this.team;
     }
@@ -23,4 +24,5 @@ abstract class Piece{
     public String getIdentifier(){
         return this.identifier;
     }
+  
 }

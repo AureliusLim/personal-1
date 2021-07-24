@@ -1,6 +1,12 @@
 import java.util.*;
-class Main{
 
+class Main{
+    static boolean parseTurn(int num, char c){
+        if(c == 'W' && num == 1 || c == 'B' && num == -1){
+            return true;
+        }
+        return false;
+    }
     public static void main(String[] args){
         int turn = 1;
         String winner = "null";
@@ -11,26 +17,29 @@ class Main{
         Black black = new Black();
 
         board.assignPieces(white, black);
-        while(winner.equals("null")){
+        while(winner.equals("null")){ // continue game until it is over
             board.draw();
-            if (turn == 1){
+            if (turn == 1){ // White's turn
                 System.out.println("White Moves!");
                
             }
-            else{
+            else{ // Black's Turn
                 System.out.println("Black Moves!");
             }
             do{
-                System.out.print("Enter coord of piece to move(a1,b2...):");
+                System.out.print("Enter coord of piece to move(a1,b2...):"); 
                 current = in.nextLine();
-            }while((board.scanPos(current) == null));
+            }while(board.scanPos(current) == null || !parseTurn(turn, board.scanPos(current).getTeam()) ); // scan if selected piece is valid and of the same team
             
             
-            System.out.print("Enter new position (a1,b2...):");
-            nextPos = in.nextLine();
+            do{
+                System.out.print("Enter new position (a1,b2...):");
+                nextPos = in.nextLine();
+            }while( (board.scanPos(nextPos) != null && parseTurn(turn,board.scanPos(nextPos).getTeam()) ) || !(board.play(current, nextPos)) );
             
-            // if pos is free, then proceed
-            // if piece can perform move, then proceed
+           
+            // if newpos is free from same team and piece can perform it then proceed
+           
             
 
             turn *= -1;
