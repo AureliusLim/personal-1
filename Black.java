@@ -9,6 +9,8 @@ public class Black extends Player{
     }
     @Override
     public void delPiece(Piece removed){
+        System.out.println(this.pieces.size());
         this.pieces.remove(removed);
+        System.out.println(this.pieces.size());
     }
 }

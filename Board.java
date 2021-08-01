@@ -52,13 +52,15 @@ public class Board {
         Piece taken = this.scanPos(next);
         boolean res = this.play(old,next);
         if(res){
-            for (int i = 0; i < enemy.pieces.size(); i++){
-                if (enemy.pieces.get(i) == taken){
-                    enemy.pieces.remove(i);
-                    System.out.println("REMOVED");
-                    return true;
-                }
-            }
+            // for (int i = 0; i < enemy.pieces.size(); i++){
+            //     if (enemy.pieces.get(i) == taken){
+            //         enemy.pieces.remove(i);
+            //         System.out.println("REMOVED");
+            //         return true;
+            //     }
+            // }
+            enemy.delPiece(taken);
+            return true;
         }
         return false;
     }
