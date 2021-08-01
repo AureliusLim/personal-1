@@ -12,8 +12,8 @@ abstract class Piece{
         this.y = y;
         this.eaten = false;
     }
-    abstract public void eat(Piece x);
-    abstract boolean move(int beforeX, int beforeY, int afterX, int afterY);
+    
+    abstract boolean move(int beforeX, int beforeY, int afterX, int afterY, boolean toEat);
 
     public char getTeam(){
         return this.team;

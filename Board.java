@@ -1,4 +1,5 @@
 import java.util.*;
+
 public class Board {
     private ArrayList<Piece> pieces;
     
@@ -46,19 +47,45 @@ public class Board {
         }
     }
     
-    public void prePlay(String position){
-
+    public boolean play(String old, String next, Player enemy){
+        
+        Piece taken = this.scanPos(next);
+        boolean res = this.play(old,next);
+        if(res){
+            for (int i = 0; i < enemy.pieces.size(); i++){
+                if (enemy.pieces.get(i) == taken){
+                    enemy.pieces.remove(i);
+                    System.out.println("REMOVED");
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     public boolean play(String old, String next){
+        int beforeX,beforeY, afterX, afterY;
+        boolean toEat = true;
         Piece cur = this.scanPos(old);
-     
+        Piece taken = this.scanPos(next);
 
-        int beforeX = (int)(old.charAt(0) - 97);
-        int beforeY = Character.getNumericValue(old.charAt(1));
-        int afterX = (int)(next.charAt(0) - 97);
-        int afterY = Character.getNumericValue(next.charAt(1));
+        if (taken == null){
+            toEat = false;
+        }
         
-        return cur.move(beforeX, beforeY, afterX, afterY);
+
+        try{
+            beforeX = (int)(old.charAt(0) - 97);
+            beforeY = Character.getNumericValue(old.charAt(1));
+            afterX = (int)(next.charAt(0) - 97);
+            afterY = Character.getNumericValue(next.charAt(1));
+        }
+        catch(StringIndexOutOfBoundsException e){
+            System.out.println("Invalid input");
+            return false;
+        }
+        
+        
+        return cur.move(beforeX, beforeY, afterX, afterY, toEat);
        
     }
     public Piece scanPos(String position){ // determines if there is a piece on the chess coord

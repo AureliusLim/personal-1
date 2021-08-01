@@ -9,6 +9,7 @@ class Main{
     }
     public static void main(String[] args){
         int turn = 1;
+        boolean valid = false;
         String winner = "null";
         String current = "null",nextPos = "null";
         Scanner in = new Scanner(System.in);
@@ -31,21 +32,20 @@ class Main{
                 current = in.nextLine();
             }while(board.scanPos(current) == null || !parseTurn(turn, board.scanPos(current).getTeam()) ); // scan if selected piece is valid and of the same team
             
-            while(1 < 2){
+            while(!valid){
                 System.out.print("Enter new position (a1,b2...):");
                 nextPos = in.nextLine();
                 if(board.scanPos(nextPos) != null && !parseTurn(turn,board.scanPos(nextPos).getTeam())){ // if player intends to eat piece
-                    if (board.play(current, nextPos)){
-                        break;
+                    if(turn == 1){
+                         valid = board.play(current, nextPos, black);
+                    }
+                    else{
+                        valid = board.play(current,nextPos,white);
                     }
                 }
                 else{ // if player intends to move piece
-                    if (board.play(current, nextPos)){
-                        break;
-                    }
-                }
-
-                
+                    valid = board.play(current, nextPos);
+                } 
             }
             
            
@@ -54,6 +54,7 @@ class Main{
             
 
             turn *= -1;
+            valid = false;
         }
         in.close();
     
