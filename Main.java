@@ -31,11 +31,22 @@ class Main{
                 current = in.nextLine();
             }while(board.scanPos(current) == null || !parseTurn(turn, board.scanPos(current).getTeam()) ); // scan if selected piece is valid and of the same team
             
-            
-            do{
+            while(1 < 2){
                 System.out.print("Enter new position (a1,b2...):");
                 nextPos = in.nextLine();
-            }while( (board.scanPos(nextPos) != null && parseTurn(turn,board.scanPos(nextPos).getTeam()) ) || !(board.play(current, nextPos)) );
+                if(board.scanPos(nextPos) != null && !parseTurn(turn,board.scanPos(nextPos).getTeam())){ // if player intends to eat piece
+                    if (board.play(current, nextPos)){
+                        break;
+                    }
+                }
+                else{ // if player intends to move piece
+                    if (board.play(current, nextPos)){
+                        break;
+                    }
+                }
+
+                
+            }
             
            
             // if newpos is free from same team and piece can perform it then proceed

@@ -10,7 +10,9 @@ public class Pawn extends Piece {
                 //eat
             }
             this.x = (char)(afterX + 97);
-            this.y = (char)(afterY);
+            this.y = Character.forDigit(afterY, 10);
+            
+            System.out.println("newpos:"+ this.x + "" + this.y);
             return true;
         }
         

@@ -57,6 +57,7 @@ public class Board {
         int beforeY = Character.getNumericValue(old.charAt(1));
         int afterX = (int)(next.charAt(0) - 97);
         int afterY = Character.getNumericValue(next.charAt(1));
+        
         return cur.move(beforeX, beforeY, afterX, afterY);
        
     }
