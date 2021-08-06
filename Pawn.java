@@ -7,11 +7,11 @@ public class Pawn extends Piece {
     @Override
     public boolean move(int beforeX, int beforeY, int afterX, int afterY, boolean toEat){
         
-        if ( (this.team == 'W' && afterY == beforeY + 1) || (this.team == 'B' && afterY == beforeY - 1) ){ // one square
-            System.out.println("one square");
-            this.first = false;
+        if ( (this.team == 'W' && afterY == beforeY + 1) || (this.team == 'B' && afterY == beforeY - 1)){ // one square
+            
             if(toEat){
                 if(afterX == beforeX - 1 || afterX == beforeX + 1){
+                    this.first = false;
                     this.x = (char)(afterX + 97);
                     this.y = Character.forDigit(afterY, 10);
             
@@ -21,6 +21,7 @@ public class Pawn extends Piece {
             }
             else{ 
                 if(afterX != beforeX - 1 && afterX != beforeX + 1){
+                    this.first = false;
                     this.x = (char)(afterX + 97);
                     this.y = Character.forDigit(afterY, 10);
             
@@ -30,7 +31,7 @@ public class Pawn extends Piece {
             }
             
         }
-        else if ( ((this.team == 'W' && afterY == beforeY + 2) || (this.team == 'B' && afterY == beforeY - 2)) && this.first == true ){ // two squares
+        else if ( ((this.team == 'W' && afterY == beforeY + 2) || (this.team == 'B' && afterY == beforeY - 2)) && this.first == true  && beforeX == afterX){ // two squares
             if (!toEat){
                 this.x = (char)(afterX + 97);
                 this.y = Character.forDigit(afterY, 10);

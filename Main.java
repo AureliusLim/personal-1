@@ -17,12 +17,11 @@ class Main{
         White white = new White();
         Black black = new Black();
 
-        board.assignPieces(white, black);
+        //board.assignPieces(white, black);
         while(winner.equals("null")){ // continue game until it is over
-            board.draw();
+            board.draw(white,black);
             if (turn == 1){ // White's turn
                 System.out.println("White Moves!");
-               
             }
             else{ // Black's Turn
                 System.out.println("Black Moves!");
@@ -30,21 +29,27 @@ class Main{
             do{
                 System.out.print("Enter coord of piece to move(a1,b2...):"); 
                 current = in.nextLine();
-            }while(board.scanPos(current) == null || !parseTurn(turn, board.scanPos(current).getTeam()) ); // scan if selected piece is valid and of the same team
+            }while(board.scanPos(current, white, black) == null || !parseTurn(turn, board.scanPos(current, white, black).getTeam()) ); // scan if selected piece is valid and of the same team
             
             while(!valid){
                 System.out.print("Enter new position (a1,b2...):");
                 nextPos = in.nextLine();
-                if(board.scanPos(nextPos) != null && !parseTurn(turn,board.scanPos(nextPos).getTeam())){ // if player intends to eat piece
+                if(board.scanPos(nextPos,white,black) != null && !parseTurn(turn,board.scanPos(nextPos,white,black).getTeam())){ // if player intends to eat piece
+                    System.out.println("EAT");
                     if(turn == 1){
-                         valid = board.play(current, nextPos, black);
+                         valid = white.take(current, nextPos, white, black, board);
                     }
                     else{
-                        valid = board.play(current,nextPos,white);
+                        valid = black.take(current,nextPos,black, white, board);
                     }
                 }
                 else{ // if player intends to move piece
-                    valid = board.play(current, nextPos);
+                    if(turn == 1){
+                        valid = white.play(current, nextPos, white, black, board);
+                   }
+                   else{
+                       valid = black.play(current,nextPos,black, white, board);
+                   }
                 } 
             }
             
