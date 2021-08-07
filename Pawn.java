@@ -15,7 +15,7 @@ public class Pawn extends Piece {
                     this.x = (char)(afterX + 97);
                     this.y = Character.forDigit(afterY, 10);
             
-                    System.out.println("newpos:"+ this.x + "" + this.y);
+                    //System.out.println("newpos:"+ this.x + "" + this.y);
                     return true;
                 }
             }
@@ -25,7 +25,7 @@ public class Pawn extends Piece {
                     this.x = (char)(afterX + 97);
                     this.y = Character.forDigit(afterY, 10);
             
-                    System.out.println("newpos:"+ this.x + "" + this.y);
+                    //System.out.println("newpos:"+ this.x + "" + this.y);
                     return true;
                 }
             }
@@ -36,7 +36,7 @@ public class Pawn extends Piece {
                 this.x = (char)(afterX + 97);
                 this.y = Character.forDigit(afterY, 10);
                 
-                System.out.println("newpos:"+ this.x + "" + this.y);
+                //System.out.println("newpos:"+ this.x + "" + this.y);
                 this.first = false;
                 return true;
             }

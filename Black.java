@@ -10,6 +10,9 @@ public class Black extends Player{
         Pawn p66 = new Pawn("P",'B','f','7');pieces.add(p66);
         Pawn p77 = new Pawn("P",'B','g','7');pieces.add(p77);
         Pawn p88 = new Pawn("P",'B','h','7');pieces.add(p88);
+
+        Bishop b11 = new Bishop("B", 'B', 'c', '8');pieces.add(b11);
+        Bishop b22 = new Bishop("B", 'B', 'f', '8'); pieces.add(b22);
     }
   
 }

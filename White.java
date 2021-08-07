@@ -9,6 +9,9 @@ public class White extends Player  {
         Pawn p6 = new Pawn("P",'W','f','2');pieces.add(p6);
         Pawn p7 = new Pawn("P",'W','g','2');pieces.add(p7);
         Pawn p8 = new Pawn("P",'W','h','2');pieces.add(p8);
+
+        Bishop b1 = new Bishop("B", 'W', 'c', '1');pieces.add(b1);
+        Bishop b2 = new Bishop("B", 'W', 'f', '1'); pieces.add(b2);
         this.team = "White";
     }
     
