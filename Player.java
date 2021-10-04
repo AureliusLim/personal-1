@@ -16,8 +16,8 @@ abstract class Player{
     }
     
     public void delPiece(Piece removed){
-        //char c = removed.getTeam();
-        this.pieces.remove(removed);//System.out.println( c +": deleted");
+       
+        this.pieces.remove(removed);
         
     }
     public boolean take(String old, String next, Player current, Player enemy, Board board){
@@ -54,7 +54,7 @@ abstract class Player{
         }
         
         
-        return cur.move(beforeX, beforeY, afterX, afterY, toEat);
+        return cur.move(beforeX, beforeY, afterX, afterY, toEat, board, current, enemy);
        
     }
 }

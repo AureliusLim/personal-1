@@ -13,7 +13,7 @@ abstract class Piece{
         this.eaten = false;
     }
     
-    abstract boolean move(int beforeX, int beforeY, int afterX, int afterY, boolean toEat);
+    abstract boolean move(int beforeX, int beforeY, int afterX, int afterY, boolean toEat, Board board, Player current, Player enemy);
 
     public char getTeam(){
         return this.team;

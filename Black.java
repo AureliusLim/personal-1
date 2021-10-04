@@ -13,6 +13,8 @@ public class Black extends Player{
 
         Bishop b11 = new Bishop("B", 'B', 'c', '8');pieces.add(b11);
         Bishop b22 = new Bishop("B", 'B', 'f', '8'); pieces.add(b22);
+        Knight k11 = new Knight("H", 'B', 'b', '8'); pieces.add(k11);
+        Knight k22 = new Knight("H", 'B', 'g', '8'); pieces.add(k22);
     }
   
 }

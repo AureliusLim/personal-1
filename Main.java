@@ -35,7 +35,6 @@ class Main{
                 System.out.print("Enter new position (a1,b2...):");
                 nextPos = in.nextLine();
                 if(board.scanPos(nextPos,white,black) != null && !parseTurn(turn,board.scanPos(nextPos,white,black).getTeam())){ // if player intends to eat piece
-                    System.out.println("EAT");
                     if(turn == 1){
                          valid = white.take(current, nextPos, white, black, board);
                     }

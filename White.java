@@ -12,6 +12,8 @@ public class White extends Player  {
 
         Bishop b1 = new Bishop("B", 'W', 'c', '1');pieces.add(b1);
         Bishop b2 = new Bishop("B", 'W', 'f', '1'); pieces.add(b2);
+        Knight k1 = new Knight("H", 'W', 'b', '1'); pieces.add(k1);
+        Knight k2 = new Knight("H", 'W', 'g', '1'); pieces.add(k2);
         this.team = "White";
     }
     

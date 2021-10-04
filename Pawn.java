@@ -5,7 +5,7 @@ public class Pawn extends Piece {
         this.first = true;
     }
     @Override
-    public boolean move(int beforeX, int beforeY, int afterX, int afterY, boolean toEat){
+    public boolean move(int beforeX, int beforeY, int afterX, int afterY, boolean toEat, Board board, Player current, Player enemy){
         
         if ( (this.team == 'W' && afterY == beforeY + 1) || (this.team == 'B' && afterY == beforeY - 1)){ // one square
             
@@ -33,6 +33,20 @@ public class Pawn extends Piece {
         }
         else if ( ((this.team == 'W' && afterY == beforeY + 2) || (this.team == 'B' && afterY == beforeY - 2)) && this.first == true  && beforeX == afterX){ // two squares
             if (!toEat){
+                int tempX, tempY;
+                tempX = beforeX;
+                tempY = beforeY;
+                while (tempY != afterY){
+                    if (afterY > beforeY){
+                        tempY++;
+                    }
+                    else if (afterY < beforeY){
+                        tempY--;
+                    }
+                    if (board.scanPos(tempX, tempY, current, enemy) != null){
+                        return false;
+                    }
+                }
                 this.x = (char)(afterX + 97);
                 this.y = Character.forDigit(afterY, 10);
                 
