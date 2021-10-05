@@ -15,6 +15,10 @@ public class Black extends Player{
         Bishop b22 = new Bishop("B", 'B', 'f', '8'); pieces.add(b22);
         Knight k11 = new Knight("H", 'B', 'b', '8'); pieces.add(k11);
         Knight k22 = new Knight("H", 'B', 'g', '8'); pieces.add(k22);
+        Rook R11 = new Rook("R", 'B', 'a', '8'); pieces.add(R11);
+        Rook R22 = new Rook("R", 'B', 'h', '8'); pieces.add(R22);
+        Queen Q11 = new Queen("Q", 'B', 'd', '8'); pieces.add(Q11);
+        King K11 = new King("K", 'B', 'e', '8'); pieces.add(K11);
     }
   
 }

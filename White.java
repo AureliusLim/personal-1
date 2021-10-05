@@ -1,3 +1,4 @@
+
 public class White extends Player  {
     public White(){
         super();
@@ -14,6 +15,10 @@ public class White extends Player  {
         Bishop b2 = new Bishop("B", 'W', 'f', '1'); pieces.add(b2);
         Knight k1 = new Knight("H", 'W', 'b', '1'); pieces.add(k1);
         Knight k2 = new Knight("H", 'W', 'g', '1'); pieces.add(k2);
+        Rook R1 = new Rook("R", 'W', 'a', '1'); pieces.add(R1);
+        Rook R2 = new Rook("R", 'W', 'h', '1'); pieces.add(R2);
+        Queen Q1 = new Queen("Q", 'W', 'd', '1'); pieces.add(Q1);
+        King K1 = new King("K", 'W', 'e', '1'); pieces.add(K1);
         this.team = "White";
     }
     

@@ -7,25 +7,24 @@ public class Pawn extends Piece {
     @Override
     public boolean move(int beforeX, int beforeY, int afterX, int afterY, boolean toEat, Board board, Player current, Player enemy){
         
+       if (this.pathchecker(beforeX, beforeY, afterX, afterY, toEat, board, current, enemy) == true){
+           this.update(afterX, afterY);
+           return true;
+       }
+       return false;
+    }
+    
+    public boolean pathchecker(int beforeX, int beforeY, int afterX, int afterY, boolean toEat, Board board, Player current, Player enemy){
         if ( (this.team == 'W' && afterY == beforeY + 1) || (this.team == 'B' && afterY == beforeY - 1)){ // one square
             
             if(toEat){
                 if(afterX == beforeX - 1 || afterX == beforeX + 1){
-                    this.first = false;
-                    this.x = (char)(afterX + 97);
-                    this.y = Character.forDigit(afterY, 10);
-            
-                    //System.out.println("newpos:"+ this.x + "" + this.y);
                     return true;
                 }
             }
             else{ 
                 if(afterX != beforeX - 1 && afterX != beforeX + 1){
                     this.first = false;
-                    this.x = (char)(afterX + 97);
-                    this.y = Character.forDigit(afterY, 10);
-            
-                    //System.out.println("newpos:"+ this.x + "" + this.y);
                     return true;
                 }
             }
@@ -47,17 +46,12 @@ public class Pawn extends Piece {
                         return false;
                     }
                 }
-                this.x = (char)(afterX + 97);
-                this.y = Character.forDigit(afterY, 10);
-                
-                //System.out.println("newpos:"+ this.x + "" + this.y);
                 this.first = false;
                 return true;
             }
         }
-        
-        
         return false;
     }
+    
    
 }

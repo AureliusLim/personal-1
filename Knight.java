@@ -4,11 +4,14 @@ public class Knight extends Piece{
     }
     @Override
     public boolean move(int beforeX, int beforeY, int afterX, int afterY, boolean toEat, Board board, Player current, Player enemy){
-        System.out.println("Before:" + beforeX + " " + beforeY);
-        System.out.println("After:" + afterX + " " + afterY);
-        if( (afterX == beforeX - 1) && (afterY == beforeY + 2) || (afterX == beforeX + 1) && (afterY == beforeY + 2) || (afterX == beforeX - 2) && (afterY == beforeY + 1) || (afterX == beforeX - 2) && (afterY == beforeY - 1) || (afterX == beforeX + 2) && (afterY == beforeY - 1) || (afterX == beforeX + 2) && (afterY == beforeY - 1) || (afterX == beforeX - 1) && (afterY == beforeY - 2) || (afterX == beforeX + 1) && (afterY == beforeY - 2)){
-            this.x = (char)(afterX + 97);
-            this.y = Character.forDigit(afterY, 10);
+        if (this.pathchecker(beforeX, beforeY, afterX, afterY, toEat, board, current, enemy) == true){
+            this.update(afterX, afterY);
+            return true;
+        }
+        return false;
+    }
+    public boolean pathchecker(int beforeX, int beforeY, int afterX, int afterY, boolean toEat, Board board, Player current, Player enemy){
+        if( (afterX == beforeX - 1) && (afterY == beforeY + 2) || (afterX == beforeX + 1) && (afterY == beforeY + 2) || (afterX == beforeX - 2) && (afterY == beforeY + 1) || (afterX == beforeX - 2) && (afterY == beforeY - 1) || (afterX == beforeX + 2) && (afterY == beforeY - 1) || (afterX == beforeX + 2) && (afterY == beforeY + 1) || (afterX == beforeX - 1) && (afterY == beforeY - 2) || (afterX == beforeX + 1) && (afterY == beforeY - 2)){
             return true;
         }
         return false;

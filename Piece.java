@@ -14,7 +14,8 @@ abstract class Piece{
     }
     
     abstract boolean move(int beforeX, int beforeY, int afterX, int afterY, boolean toEat, Board board, Player current, Player enemy);
-
+    abstract boolean pathchecker(int beforeX, int beforeY, int afterX, int afterY, boolean toEat, Board board, Player current, Player enemy);
+    
     public char getTeam(){
         return this.team;
     }
@@ -24,5 +25,8 @@ abstract class Piece{
     public String getIdentifier(){
         return this.identifier;
     }
-  
+    public void update(int afterX, int afterY){
+        this.x = (char)(afterX + 97);
+        this.y = Character.forDigit(afterY, 10);
+    }
 }

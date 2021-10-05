@@ -4,6 +4,13 @@ public class Bishop extends Piece{
         super(identifier, team, x, y);
     }
     public boolean move(int beforeX, int beforeY, int afterX, int afterY, boolean toEat, Board board, Player current, Player enemy){
+       if(this.pathchecker(beforeX, beforeY, afterX, afterY, toEat, board, current, enemy) == true){
+           this.update(afterX, afterY);
+           return true;
+       }
+        return false;
+    }
+    public boolean pathchecker(int beforeX, int beforeY, int afterX, int afterY, boolean toEat, Board board, Player current, Player enemy){
         int changeX = Math.abs(beforeX - afterX);
         int changeY = Math.abs(beforeY - afterY);
 
@@ -33,11 +40,10 @@ public class Bishop extends Piece{
                     return false;
                 }
             }
-            this.x = (char)(afterX + 97);
-            this.y = Character.forDigit(afterY, 10);
             return true;
         }
 
         return false;
     }
 }
+
