@@ -1,5 +1,7 @@
 import java.util.*;
 
+import javax.xml.XMLConstants;
+
 public class Board {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_PURPLE = "\u001B[35m";
@@ -56,5 +58,450 @@ public class Board {
        
         return null;
     }
+    public boolean kingcheck(Board board, Player current, Player enemy){
+        ArrayList<String> checkPos = new ArrayList<>();
+        for (int k = 0; k < enemy.getPieces().size(); k++){
+            String currentpos = enemy.getPieces().get(k).getPos();
+            int x = (int)(currentpos.charAt(0) - 97);
+            int y= Character.getNumericValue(currentpos.charAt(1));
+            Piece occupied = null;
+            int tempX = x;
+            int tempY = y;
+            if (enemy.getPieces().get(k).getIdentifier().equals("P")){ // pawn
+                if (enemy.getTeam() == "White"){
+                
+                    // white upleft
+                    tempX -= 1;
+                    tempY += 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                    if ((tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0))
+                    checkPos.add(""+valueX+valueY);
+
+                    // white upright
+                    tempX = x;
+                    tempY = y;
+                    tempX += 1;
+                    tempY += 1;
+                    valueX = (char)(tempX + 97);
+                    valueY = (char)(Character.forDigit(tempY, 10));
+                    if ((tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0))
+                    checkPos.add(""+valueX+valueY);
+                }
+                else{
+                    // black downleft
+                    tempX = x;
+                    tempY = y;
+                    tempX -= 1;
+                    tempY -= 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                    if ((tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0))
+                    checkPos.add(""+valueX+valueY);
+
+                    // white downright
+                    tempX = x;
+                    tempY = y;
+                    tempX += 1;
+                    tempY -= 1;
+                    valueX = (char)(tempX + 97);
+                    valueY = (char)(Character.forDigit(tempY, 10));
+                    if ((tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0))
+                    checkPos.add(""+valueX+valueY);
+                }
+            }
+            
+            else if (enemy.getPieces().get(k).getIdentifier().equals("B")){ // bishop
+                // upleft
+                tempX = x;
+                tempY = y;
+                occupied = null;
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 && occupied == null){
+                   
+                    tempX -= 1;
+                    tempY += 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   occupied = board.scanPos(tempX, tempY, current, enemy);
+                   if ((occupied == null || occupied.getIdentifier().equals("K") ) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                    checkPos.add(""+valueX+valueY);
+                    }
+                   
+                }
+                // upright
+                tempX = x;
+                tempY = y;
+                occupied = null;
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                    tempX += 1;
+                    tempY += 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   occupied = board.scanPos(tempX, tempY, current, enemy);
+                   if ((occupied == null || occupied.getIdentifier().equals("K") ) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
+                    checkPos.add(""+valueX+valueY);
+                    }
+                   
+                }
+                // downleft
+                tempX = x;
+                tempY = y;
+                occupied = null;
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                    tempX -= 1;
+                    tempY -= 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   occupied = board.scanPos(tempX, tempY, current, enemy);
+                   if ((occupied == null || occupied.getIdentifier().equals("K") ) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
+                    checkPos.add(""+valueX+valueY);
+                    }
+                   
+                }
+                // downright
+                tempX = x;
+                tempY = y;
+                occupied = null;
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                    tempX += 1;
+                    tempY -= 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   occupied = board.scanPos(tempX, tempY, current, enemy);
+                   if ((occupied == null || occupied.getIdentifier().equals("K") ) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
+                    checkPos.add(""+valueX+valueY);
+                    }
+                   
+                }
+            }
+            else if (enemy.getPieces().get(k).getIdentifier().equals("H")){ // knight
+                
+                tempX -= 1;
+                tempY += 2;
+                char valueX = (char)(tempX + 97);
+                char valueY = (char)(Character.forDigit(tempY, 10));
+                if ((tempX > -1 && tempX < 8 && tempY < 9 && tempY >= 0 ))
+                    checkPos.add(""+valueX+valueY);
+              
+                tempX = x;
+                tempY = y;
+               
+                tempX += 1;
+                tempY += 2;
+                valueX = (char)(tempX + 97);
+                valueY = (char)(Character.forDigit(tempY, 10));    
+                if ((tempX > -1 && tempX < 8 && tempY < 9 && tempY >= 0 ))
+                    checkPos.add(""+valueX+valueY);
+
+                tempX = x;
+                tempY = y;
+            
+                tempX -= 2;
+                tempY += 1;
+                valueX = (char)(tempX + 97);
+                valueY = (char)(Character.forDigit(tempY, 10));
+            
+                if ((tempX > -1 && tempX < 8 && tempY < 9 && tempY >= 0 ))
+                    checkPos.add(""+valueX+valueY);
+                
+                   
+                
+                tempX = x;
+                tempY = y;
+                
+                tempX -= 2;
+                tempY -= 1;
+                valueX = (char)(tempX + 97);
+                valueY = (char)(Character.forDigit(tempY, 10));
+                if ((tempX > -1 && tempX < 8 && tempY < 9 && tempY >= 0 ))
+                    checkPos.add(""+valueX+valueY);
+                
+                
+                
+                tempX = x;
+                tempY = y;
+                
+                tempX += 2;
+                tempY -= 1;
+                valueX = (char)(tempX + 97);
+                valueY = (char)(Character.forDigit(tempY, 10));
+            
+                if ((tempX > -1 && tempX < 8 && tempY < 9 && tempY >= 0 ))
+                    checkPos.add(""+valueX+valueY);
+                
+                
+                
+                tempX = x;
+                tempY = y;
+                
+                tempX += 2;
+                tempY += 1;
+                valueX = (char)(tempX + 97);
+                valueY = (char)(Character.forDigit(tempY, 10));
+                if ((tempX > -1 && tempX < 8 && tempY < 9 && tempY >= 0 ))
+                    checkPos.add(""+valueX+valueY);
+
+                tempX = x;
+                tempY = y;
+               
+               
+                tempX -= 1;
+                tempY -= 2;
+                valueX = (char)(tempX + 97);
+                valueY = (char)(Character.forDigit(tempY, 10));
+                if ((tempX > -1 && tempX < 8 && tempY < 9 && tempY >= 0 ))
+                    checkPos.add(""+valueX+valueY);
+                
+                tempX = x;
+                tempY = y;
+               
+                tempX += 1;
+                tempY -= 2;
+                valueX = (char)(tempX + 97);
+                valueY = (char)(Character.forDigit(tempY, 10));
+                if ((tempX > -1 && tempX <= 8 && tempY < 9 && tempY >= 0 ))
+                    checkPos.add(""+valueX+valueY);
+            }
+            else if (enemy.getPieces().get(k).getIdentifier().equals("R")){ // rook
+                //left
+                tempX = x;
+                tempY = y;
+                occupied = null;
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                    tempX -= 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   occupied = board.scanPos(tempX, tempY, current, enemy);
+                    if ((occupied == null || occupied.getIdentifier().equals("K") ) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
+                        checkPos.add(""+valueX+valueY);
+                    }
+                   
+                }
+                // up
+                tempX = x;
+                tempY = y;
+                occupied = null;
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                    tempY += 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   occupied = board.scanPos(tempX, tempY, current, enemy);
+                    if ((occupied == null || occupied.getIdentifier().equals("K") ) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
+                        checkPos.add(""+valueX+valueY);
+                    }
+                   
+                }
+                // right
+                tempX = x;
+                tempY = y;
+                occupied = null;
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                    tempX += 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   occupied = board.scanPos(tempX, tempY, current, enemy);
+                    if ((occupied == null || occupied.getIdentifier().equals("K") ) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
+                        checkPos.add(""+valueX+valueY);
+                    }
+                   
+                }
+                // down
+                tempX = x;
+                tempY = y;
+                occupied = null;
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                    tempY -= 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   occupied = board.scanPos(tempX, tempY, current, enemy);
+                    if ((occupied == null || occupied.getIdentifier().equals("K") ) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
+                        checkPos.add(""+valueX+valueY);
+                    }
+                   
+                }
+            }
+            else if (enemy.getPieces().get(k).getIdentifier().equals("Q")){// queen
+                // upleft
+                tempX = x;
+                tempY = y;
+                occupied = null;
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                    tempX -= 1;
+                    tempY += 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   occupied = board.scanPos(tempX, tempY, current, enemy);
+                   if ((occupied == null || occupied.getIdentifier().equals("K") ) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
+                    checkPos.add(""+valueX+valueY);
+                }
+                   
+                }
+                // upright
+                tempX = x;
+                tempY = y;
+                occupied = null;
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                    tempX += 1;
+                    tempY += 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   occupied = board.scanPos(tempX, tempY, current, enemy);
+                   if ((occupied == null || occupied.getIdentifier().equals("K") ) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
+                    checkPos.add(""+valueX+valueY);
+                }
+                   
+                }
+                // downleft
+                tempX = x;
+                tempY = y;
+                occupied = null;
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                    tempX -= 1;
+                    tempY -= 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   occupied = board.scanPos(tempX, tempY, current, enemy);
+                   if ((occupied == null || occupied.getIdentifier().equals("K") ) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
+                    checkPos.add(""+valueX+valueY);
+                }
+                   
+                }
+                // downright
+                tempX = x;
+                tempY = y;
+                occupied = null;
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                    tempX += 1;
+                    tempY -= 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   occupied = board.scanPos(tempX, tempY, current, enemy);
+                   if ((occupied == null || occupied.getIdentifier().equals("K") ) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
+                    checkPos.add(""+valueX+valueY);
+                }
+                   
+                }
+                //left
+                tempX = x;
+                tempY = y;
+                occupied = null;
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                    tempX -= 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   occupied = board.scanPos(tempX, tempY, current, enemy);
+                   if ((occupied == null || occupied.getIdentifier().equals("K") ) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
+                    checkPos.add(""+valueX+valueY);
+                }
+                   
+                }
+                // up
+                tempX = x;
+                tempY = y;
+                occupied = null;
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                    tempY += 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   occupied = board.scanPos(tempX, tempY, current, enemy);
+                   if ((occupied == null || occupied.getIdentifier().equals("K") ) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
+                    checkPos.add(""+valueX+valueY);
+                }
+                   
+                }
+                // right
+                tempX = x;
+                tempY = y;
+                occupied = null;
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                    tempX += 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   occupied = board.scanPos(tempX, tempY, current, enemy);
+                   if ((occupied == null || occupied.getIdentifier().equals("K") ) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
+                    checkPos.add(""+valueX+valueY);
+                }
+                   
+                }
+                // down
+                tempX = x;
+                tempY = y;
+                occupied = null;
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                    tempY -= 1;
+                    char valueX = (char)(tempX + 97);
+                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   occupied = board.scanPos(tempX, tempY, current, enemy);
+                   if ((occupied == null || occupied.getIdentifier().equals("K") ) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
+                    checkPos.add(""+valueX+valueY);
+                }
+                   
+                }
+            }
+            else if (enemy.getPieces().get(k).getIdentifier().equals("K")){// king
+                //left
+                tempX = x;
+                tempY = y;
+               
+               
+                tempX -= 1;
+                char valueX = (char)(tempX + 97);
+                char valueY = (char)(Character.forDigit(tempY, 10));
+                
+                if ((tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 ))
+                    checkPos.add(""+valueX+valueY);
+                // up
+                tempX = x;
+                tempY = y;
+               
+                tempY += 1;
+                valueX = (char)(tempX + 97);
+                valueY = (char)(Character.forDigit(tempY, 10));
+                
+                if ((tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 ))
+                    checkPos.add(""+valueX+valueY);
+
+                // right
+                tempX = x;
+                tempY = y;
+               
+                tempX += 1;
+                valueX = (char)(tempX + 97);
+                valueY = (char)(Character.forDigit(tempY, 10));
+                
+                if ((tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 ))
+                    checkPos.add(""+valueX+valueY);
+                    
+                // down
+                tempX = x;
+                tempY = y;
+                
+                tempY -= 1;
+                valueX = (char)(tempX + 97);
+                valueY = (char)(Character.forDigit(tempY, 10));
+            
+                if ((tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 ))
+                    checkPos.add(""+valueX+valueY);
+            }
+        }
+        String currentKing = "";
+        for (int i = 0; i < current.getPieces().size(); i++){
+            if (current.getPieces().get(i).getIdentifier() == "K"){
+                currentKing = current.getPieces().get(i).getPos();
+                break;
+            }
+        }
+        // for (int i = 0; i < checkPos.size(); i++){
+        //     System.out.println(checkPos.get(i));
+        // }
+        for (int i = 0; i < checkPos.size(); i++){
+            //System.out.println("KINGPOS:" + currentKing + "=" + checkPos.get(i));
+            if (currentKing.equals(checkPos.get(i))){
+                System.out.println("Check!");
+                return true; // currentKing is checked
+            }
+        }
+        return false;
+   }
 
 }

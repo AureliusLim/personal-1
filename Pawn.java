@@ -8,8 +8,10 @@ public class Pawn extends Piece {
     public boolean move(int beforeX, int beforeY, int afterX, int afterY, boolean toEat, Board board, Player current, Player enemy){
         
        if (this.pathchecker(beforeX, beforeY, afterX, afterY, toEat, board, current, enemy) == true){
-           this.update(afterX, afterY);
-           return true;
+          
+        this.update(afterX, afterY);
+        return true;
+         
        }
        return false;
     }
@@ -52,6 +54,5 @@ public class Pawn extends Piece {
         }
         return false;
     }
-    
    
 }

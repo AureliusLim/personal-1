@@ -20,6 +20,11 @@ class Main{
         //board.assignPieces(white, black);
         while(winner.equals("null")){ // continue game until it is over
             board.draw(white,black);
+            if (turn == 1)
+                board.kingcheck(board, white, black);
+            else
+                board.kingcheck(board,black,white);
+
             if (turn == 1){ // White's turn
                 System.out.println("White Moves!");
             }
@@ -52,9 +57,7 @@ class Main{
                 } 
             }
             
-           
-            // if newpos is free from same team and piece can perform it then proceed
-           
+          
             
 
             turn *= -1;

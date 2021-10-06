@@ -14,7 +14,9 @@ abstract class Player{
     public void addPiece(Piece added){
         this.pieces.add(added);
     }
-    
+    public String getTeam(){
+        return this.team;
+    }
     public void delPiece(Piece removed){
        
         this.pieces.remove(removed);
@@ -52,9 +54,15 @@ abstract class Player{
             System.out.println("Invalid input");
             return false;
         }
+         
         
+        boolean value = cur.move(beforeX, beforeY, afterX, afterY, toEat, board, current, enemy);
+
+        if (board.kingcheck(board,current,enemy) == true){
+            cur.update(beforeX, beforeY); // current move exposed king or still kept it under check, therefore revert move
+            return false;
+        }
         
-        return cur.move(beforeX, beforeY, afterX, afterY, toEat, board, current, enemy);
-       
+        return value; 
     }
 }

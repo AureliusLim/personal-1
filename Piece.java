@@ -1,10 +1,13 @@
+import java.util.ArrayList;
+
 abstract class Piece{
     protected String identifier;
     protected boolean eaten;
     protected char team;
     protected char x;
     protected char y;
-    
+    protected ArrayList<String> checkPos;
+
     public Piece(String identifier, char team, char x, char y){
         this.identifier = identifier;
         this.team = team;
@@ -15,7 +18,6 @@ abstract class Piece{
     
     abstract boolean move(int beforeX, int beforeY, int afterX, int afterY, boolean toEat, Board board, Player current, Player enemy);
     abstract boolean pathchecker(int beforeX, int beforeY, int afterX, int afterY, boolean toEat, Board board, Player current, Player enemy);
-    
     public char getTeam(){
         return this.team;
     }
