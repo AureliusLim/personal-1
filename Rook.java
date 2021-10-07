@@ -32,7 +32,7 @@ public class Rook extends Piece{
                     else if (afterX == beforeX && afterY < beforeY){ // down
                         tempY--;
                     }
-                    if (board.scanPos(tempX, tempY, current, enemy) != null){
+                    if (board.scanPos(tempX, tempY, current, enemy) != null && tempX != afterX && tempY!= afterY){
                         return false;
                     }
                 }

@@ -4,8 +4,9 @@ public class Queen extends Piece{
     }
     @Override
     public boolean move(int beforeX, int beforeY, int afterX, int afterY, boolean toEat, Board board, Player current, Player enemy){
-        
+        System.out.println(this.pathchecker(beforeX, beforeY, afterX, afterY, toEat, board, current, enemy));
         if(this.pathchecker(beforeX, beforeY, afterX, afterY, toEat, board, current, enemy) == true){
+            
             this.update(afterX, afterY);
             return true;
         }
@@ -50,7 +51,7 @@ public class Queen extends Piece{
                         tempX++;
                         tempY++;
                     }
-                    if (board.scanPos(tempX, tempY, current, enemy) != null){
+                    if (board.scanPos(tempX, tempY, current, enemy) != null && tempX != afterX && tempY!= afterY){
                         return false;
                     }
                 }

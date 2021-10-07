@@ -26,6 +26,7 @@ abstract class Player{
         
         Piece taken =  board.scanPos(next, current, enemy);
         boolean res = this.play(old,next, current, enemy, board);
+        System.out.println(res);
         if(res){
             enemy.delPiece(taken);
            
@@ -42,7 +43,6 @@ abstract class Player{
         if (taken == null){
             toEat = false;
         }
-        
 
         try{
             beforeX = (int)(old.charAt(0) - 97);

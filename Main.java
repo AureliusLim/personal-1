@@ -20,10 +20,28 @@ class Main{
         //board.assignPieces(white, black);
         while(winner.equals("null")){ // continue game until it is over
             board.draw(white,black);
-            if (turn == 1)
-                board.kingcheck(board, white, black);
-            else
-                board.kingcheck(board,black,white);
+            if (turn == 1){
+                if (board.kingcheck(board, white, black) == true){
+                    System.out.println("Check!");
+                    System.out.println((board.kingmate(board, white, black)));
+                    if (board.kingmate(board, white, black) == true){
+                        winner = "Black";
+                        break;
+                    }
+                }
+            }
+                
+            else{
+                if (board.kingcheck(board, black, white) == true){
+                    System.out.println("Check!");
+                    System.out.println((board.kingmate(board, white, black)));
+                    if (board.kingmate(board,black, white) == true){
+                        winner = "White";
+                        break;
+                    }
+                }
+            }
+               
 
             if (turn == 1){ // White's turn
                 System.out.println("White Moves!");
@@ -41,6 +59,7 @@ class Main{
                 nextPos = in.nextLine();
                 if(board.scanPos(nextPos,white,black) != null && !parseTurn(turn,board.scanPos(nextPos,white,black).getTeam())){ // if player intends to eat piece
                     if(turn == 1){
+                       
                          valid = white.take(current, nextPos, white, black, board);
                     }
                     else{
@@ -63,6 +82,7 @@ class Main{
             turn *= -1;
             valid = false;
         }
+        System.out.println(winner + " Wins!");
         in.close();
     
     }
