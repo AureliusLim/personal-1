@@ -67,14 +67,17 @@ public class Board {
             int tempY = y;
             if (current.getPieces().get(k).getIdentifier().equals("P")){ // pawn
                 if (current.getPieces().get(k).getTeam() == 'W'){
+                    
                     if (current.getPieces().get(k).move(x, y, x,y+2, false, board, current, enemy) == false){
                         current.getPieces().get(k).update(x, y+1);
                         value = this.kingcheck(board, current, enemy);
                         current.getPieces().get(k).update(x, y);
                         if (value == false){
+                            //System.out.println(currentpos);
                             return value;
                         }
                     }
+                    current.getPieces().get(k).update(x,y);
                     for (int i = 0; i < enemy.getPieces().size(); i++){
                        tempX -= 1;
                         tempY += 1;
@@ -85,10 +88,12 @@ public class Board {
                         tempY += 1;
                         String eatpos2 = (char)(tempX + 97) + Character.getNumericValue(tempY) + "";
                         if (enemy.getPieces().get(i).getPos().equals(eatpos1)|| enemy.getPieces().get(i).getPos().equals(eatpos2)){
-                            current.getPieces().get(k).update(tempX, tempY);
-                            value = this.kingcheck(board, current, enemy);
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
                             current.getPieces().get(k).update(x,y);
+                            enemy.getPieces().get(i).update(tempX, tempY);
                             if (value == false){
+                                //System.out.println(currentpos);
                                 return value;
                             }
                         }
@@ -101,9 +106,11 @@ public class Board {
                         value = this.kingcheck(board, current, enemy);
                         current.getPieces().get(k).update(x, y);
                         if (value == false){
+                            //System.out.println(currentpos);
                             return value;
                         }
                     }
+                    current.getPieces().get(k).update(x,y);
                     for (int i = 0; i < enemy.getPieces().size(); i++){
                        tempX -= 1;
                         tempY -= 1;
@@ -114,10 +121,12 @@ public class Board {
                         tempY -= 1;
                         String eatpos2 = (char)(tempX + 97) + Character.getNumericValue(tempY) + "";
                         if (enemy.getPieces().get(i).getPos().equals(eatpos1)|| enemy.getPieces().get(i).getPos().equals(eatpos2)){
-                            current.getPieces().get(k).update(tempX, tempY);
-                            value = this.kingcheck(board, current, enemy);
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
                             current.getPieces().get(k).update(x,y);
+                            enemy.getPieces().get(i).update(tempX, tempY);
                             if (value == false){
+                                //System.out.println(currentpos);
                                 return value;
                             }
                         }
@@ -131,94 +140,159 @@ public class Board {
                 tempX = x;
                 tempY = y;
                 occupied = null;
-                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 && occupied == null){
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0){
                    
                     tempX -= 1;
                     tempY += 1;
-                    char valueX = (char)(tempX + 97);
-                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   
                    occupied = board.scanPos(tempX, tempY, current, enemy);
-                   if ((occupied == null || !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
-                        current.getPieces().get(k).update(valueX, valueY);
+                   if (occupied == null && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                    current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board,current,enemy);
+                        current.getPieces().get(k).update(x,y);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
+                    }
+                    else if (occupied != null && occupied.getTeam() != current.getTeam().charAt(0) && !occupied.getIdentifier().equals("K")){
+                        current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                        value = kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        occupied.update(tempX, tempY);
                         value = this.kingcheck(board,current,enemy);
                         if (value == false){
+                            //System.out.println(currentpos);
                             return value;
                         }
                     }
                    
                 }
-                current.getPieces().get(k).update(x, y);
+                
                 // upright
                 tempX = x;
                 tempY = y;
                 occupied = null;
-                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0){
                     tempX += 1;
                     tempY += 1;
-                    char valueX = (char)(tempX + 97);
-                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   
                    occupied = board.scanPos(tempX, tempY, current, enemy);
-                   if ((occupied == null || !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
-                    current.getPieces().get(k).update(valueX, valueY);
-                    value = this.kingcheck(board,current,enemy);
-                    if (value == false){
-                        return value;
+                   if (occupied == null && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                    current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board,current,enemy);
+                        current.getPieces().get(k).update(x,y);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
                     }
+                    else if (occupied != null && occupied.getTeam() != current.getTeam().charAt(0) && !occupied.getIdentifier().equals("K")){
+                        current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                        value = kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        occupied.update(tempX, tempY);
+                        value = this.kingcheck(board,current,enemy);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
                     }
                 }
-                current.getPieces().get(k).update(x, y);   
+                   
                 
                 // downleft
                 tempX = x;
                 tempY = y;
                 occupied = null;
-                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0){
                     tempX -= 1;
                     tempY -= 1;
-                    char valueX = (char)(tempX + 97);
-                    char valueY = (char)(Character.forDigit(tempY, 10));
+                    
                    occupied = board.scanPos(tempX, tempY, current, enemy);
-                   if ((occupied == null || !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
-                    current.getPieces().get(k).update(valueX, valueY);
-                    value = this.kingcheck(board,current,enemy);
-                    if (value == false){
-                        return value;
+                   if (occupied == null && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                    current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board,current,enemy);
+                        current.getPieces().get(k).update(x,y);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
                     }
-                    } 
-                }
-                current.getPieces().get(k).update(x, y);  
-                // downright
-                tempX = x;
-                tempY = y;
-                occupied = null;
-                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
-                    tempX += 1;
-                    tempY -= 1;
-                    char valueX = (char)(tempX + 97);
-                     char valueY = (char)(Character.forDigit(tempY, 10));
-                   occupied = board.scanPos(tempX, tempY, current, enemy);
-                   if ((occupied == null || !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
-                    current.getPieces().get(k).update(valueX, valueY);
+                    else if (occupied != null && occupied.getTeam() != current.getTeam().charAt(0) && !occupied.getIdentifier().equals("K")){
+                        current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                        value = kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        occupied.update(tempX, tempY);
                         value = this.kingcheck(board,current,enemy);
                         if (value == false){
+                            //System.out.println(currentpos);
                             return value;
                         }
                     }
                 }
-                current.getPieces().get(k).update(x, y);
+                 
+                // downright
+                tempX = x;
+                tempY = y;
+                occupied = null;
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0){
+                    tempX += 1;
+                    tempY -= 1;
+                   
+                   occupied = board.scanPos(tempX, tempY, current, enemy);
+                   if (occupied == null && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                    current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board,current,enemy);
+                        current.getPieces().get(k).update(x,y);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
+                    }
+                    else if (occupied != null && occupied.getTeam() != current.getTeam().charAt(0) && !occupied.getIdentifier().equals("K")){
+                        current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                        value = kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        occupied.update(tempX, tempY);
+                        value = this.kingcheck(board,current,enemy);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
+                    }
+                }
+               
             }
             else if (current.getPieces().get(k).getIdentifier().equals("H")){ // knight
                 
                 tempX -= 1;
                 tempY += 2;
-                char valueX = (char)(tempX + 97);
-                char valueY = (char)(Character.forDigit(tempY, 10));
+                occupied = null;
+                
+    
                 if ((tempX > -1 && tempX < 8 && tempY < 9 && tempY >= 0 )){
-                    current.getPieces().get(k).update(valueX, valueY);
-                    value = this.kingcheck(board, current, enemy);
-                    current.getPieces().get(k).update(x, y);
-                    if (value == false){
-                        return value;
+                    occupied = board.scanPos(tempX, tempY, current, enemy);
+                    if (occupied == null){
+
+                    
+                        current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x, y);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
+                    }
+                    else if (occupied != null && occupied.getTeam() != current.getTeam().charAt(0) && !occupied.getIdentifier().equals("K")){
+                        current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                        value = kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
                     }
 
                 }
@@ -227,14 +301,29 @@ public class Board {
                
                 tempX += 1;
                 tempY += 2;
-                valueX = (char)(tempX + 97);
-                valueY = (char)(Character.forDigit(tempY, 10));    
+                  
                 if ((tempX > -1 && tempX < 8 && tempY < 9 && tempY >= 0 )){
-                    current.getPieces().get(k).update(valueX, valueY);
-                    value = this.kingcheck(board, current, enemy);
-                    current.getPieces().get(k).update(x, y);
-                    if (value == false){
-                        return value;
+                    occupied = board.scanPos(tempX, tempY, current, enemy);
+                    if (occupied == null){
+
+                    
+                        current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x, y);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
+                    }
+                    else if (occupied != null && occupied.getTeam() != current.getTeam().charAt(0) && !occupied.getIdentifier().equals("K")){
+                        current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                        value = kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
                     }
 
                 }
@@ -244,15 +333,30 @@ public class Board {
             
                 tempX -= 2;
                 tempY += 1;
-                valueX = (char)(tempX + 97);
-                valueY = (char)(Character.forDigit(tempY, 10));
+              
             
                 if ((tempX > -1 && tempX < 8 && tempY < 9 && tempY >= 0 )){
-                    current.getPieces().get(k).update(valueX, valueY);
-                    value = this.kingcheck(board, current, enemy);
-                    current.getPieces().get(k).update(x, y);
-                    if (value == false){
-                        return value;
+                    occupied = board.scanPos(tempX, tempY, current, enemy);
+                    if (occupied == null){
+
+                    
+                        current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x, y);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
+                    }
+                    else if (occupied != null && occupied.getTeam() != current.getTeam().charAt(0) && !occupied.getIdentifier().equals("K")){
+                        current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                        value = kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
                     }
 
                 }
@@ -264,14 +368,29 @@ public class Board {
                 
                 tempX -= 2;
                 tempY -= 1;
-                valueX = (char)(tempX + 97);
-                valueY = (char)(Character.forDigit(tempY, 10));
+                
                 if ((tempX > -1 && tempX < 8 && tempY < 9 && tempY >= 0 )){
-                    current.getPieces().get(k).update(valueX, valueY);
-                    value = this.kingcheck(board, current, enemy);
-                    current.getPieces().get(k).update(x, y);
-                    if (value == false){
-                        return value;
+                    occupied = board.scanPos(tempX, tempY, current, enemy);
+                    if (occupied == null){
+
+                    
+                        current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x, y);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
+                    }
+                    else if (occupied != null && occupied.getTeam() != current.getTeam().charAt(0) && !occupied.getIdentifier().equals("K")){
+                        current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                        value = kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
                     }
 
                 }
@@ -283,15 +402,30 @@ public class Board {
                 
                 tempX += 2;
                 tempY -= 1;
-                valueX = (char)(tempX + 97);
-                valueY = (char)(Character.forDigit(tempY, 10));
+                
             
                 if ((tempX > -1 && tempX < 8 && tempY < 9 && tempY >= 0 )){
-                    current.getPieces().get(k).update(valueX, valueY);
-                    value = this.kingcheck(board, current, enemy);
-                    current.getPieces().get(k).update(x, y);
-                    if (value == false){
-                        return value;
+                    occupied = board.scanPos(tempX, tempY, current, enemy);
+                    if (occupied == null){
+
+                    
+                        current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x, y);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
+                    }
+                    else if (occupied != null && occupied.getTeam() != current.getTeam().charAt(0) && !occupied.getIdentifier().equals("K")){
+                        current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                        value = kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
                     }
 
                 }
@@ -302,14 +436,29 @@ public class Board {
                 
                 tempX += 2;
                 tempY += 1;
-                valueX = (char)(tempX + 97);
-                valueY = (char)(Character.forDigit(tempY, 10));
+                
                 if ((tempX > -1 && tempX < 8 && tempY < 9 && tempY >= 0 )){
-                    current.getPieces().get(k).update(valueX, valueY);
-                    value = this.kingcheck(board, current, enemy);
-                    current.getPieces().get(k).update(x, y);
-                    if (value == false){
-                        return value;
+                    occupied = board.scanPos(tempX, tempY, current, enemy);
+                    if (occupied == null){
+
+                    
+                        current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x, y);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
+                    }
+                    else if (occupied != null && occupied.getTeam() != current.getTeam().charAt(0) && !occupied.getIdentifier().equals("K")){
+                        current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                        value = kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
                     }
 
                 }
@@ -320,14 +469,29 @@ public class Board {
                
                 tempX -= 1;
                 tempY -= 2;
-                valueX = (char)(tempX + 97);
-                valueY = (char)(Character.forDigit(tempY, 10));
+                
                 if ((tempX > -1 && tempX < 8 && tempY < 9 && tempY >= 0 )){
-                    current.getPieces().get(k).update(valueX, valueY);
-                    value = this.kingcheck(board, current, enemy);
-                    current.getPieces().get(k).update(x, y);
-                    if (value == false){
-                        return value;
+                    occupied = board.scanPos(tempX, tempY, current, enemy);
+                    if (occupied == null){
+
+                    
+                        current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x, y);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
+                    }
+                    else if (occupied != null && occupied.getTeam() != current.getTeam().charAt(0) && !occupied.getIdentifier().equals("K")){
+                        current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                        value = kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
                     }
 
                 }
@@ -336,14 +500,29 @@ public class Board {
                
                 tempX += 1;
                 tempY -= 2;
-                valueX = (char)(tempX + 97);
-                valueY = (char)(Character.forDigit(tempY, 10));
+                
                 if ((tempX > -1 && tempX < 8 && tempY < 9 && tempY >= 0 )){
-                    current.getPieces().get(k).update(valueX, valueY);
-                    value = this.kingcheck(board, current, enemy);
-                    current.getPieces().get(k).update(x, y);
-                    if (value == false){
-                        return value;
+                    occupied = board.scanPos(tempX, tempY, current, enemy);
+                    if (occupied == null){
+
+                    
+                        current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x, y);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
+                    }
+                    else if (occupied != null && occupied.getTeam() != current.getTeam().charAt(0) && !occupied.getIdentifier().equals("K")){
+                        current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                        value = kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
                     }
 
                 }
@@ -355,78 +534,134 @@ public class Board {
                 occupied = null;
                 while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
                     tempX -= 1;
-                    char valueX = (char)(tempX + 97);
-                    char valueY = (char)(Character.forDigit(tempY, 10));
+                    
                    occupied = board.scanPos(tempX, tempY, current, enemy);
-                   if ((occupied == null || !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
-                        current.getPieces().get(k).update(valueX, valueY);
+                   if (occupied == null  && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                    current.getPieces().get(k).update(tempX, tempY);
                         value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
                         if (value == false){
+                            //System.out.println(currentpos);
                             return value;
                         }
                     }
+                    else if ((occupied != null && !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                        if (occupied.getTeam() == enemy.getTeam().charAt(0)){
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
+                            current.getPieces().get(k).update(x,y);
+                            board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                            if (value == false){
+                                //System.out.println(currentpos);
+                                return value;
+                            }
+                        }
+
+                    }
                    
                 }
-                current.getPieces().get(k).update(x, y);
+               
                 // up
                 tempX = x;
                 tempY = y;
                 occupied = null;
                 while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
                     tempY += 1;
-                    char valueX = (char)(tempX + 97);
-                    char valueY = (char)(Character.forDigit(tempY, 10));
+                    
                    occupied = board.scanPos(tempX, tempY, current, enemy);
-                   if ((occupied == null || !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
-                    current.getPieces().get(k).update(valueX, valueY);
-                    value = this.kingcheck(board, current, enemy);
-                    if (value == false){
-                        return value;
+                   if (occupied == null  && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                    current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
+                    }
+                    else if ((occupied != null && !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                        if (occupied.getTeam() == enemy.getTeam().charAt(0)){
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
+                            current.getPieces().get(k).update(x,y);
+                            board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                            if (value == false){
+                                //System.out.println(currentpos);
+                                return value;
+                            }
+                        }
+
                     }
                 }
                    
-                }
-                current.getPieces().get(k).update(x, y);
+                
+              
                 // right
                 tempX = x;
                 tempY = y;
                 occupied = null;
                 while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
                     tempX += 1;
-                    char valueX = (char)(tempX + 97);
-                    char valueY = (char)(Character.forDigit(tempY, 10));
+                    
                    occupied = board.scanPos(tempX, tempY, current, enemy);
-                   if ((occupied == null || !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
-                    current.getPieces().get(k).update(valueX, valueY);
-                    value = this.kingcheck(board, current, enemy);
-                    if (value == false){
-                        return value;
+                   if (occupied == null  && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                    current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
                     }
-                   
+                    else if ((occupied != null && !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                        if (occupied.getTeam() == enemy.getTeam().charAt(0)){
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
+                            current.getPieces().get(k).update(x,y);
+                            board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                            if (value == false){
+                                //System.out.println(currentpos);
+                                return value;
+                            }
+                        }
+
                     }
                 }
-                current.getPieces().get(k).update(x, y);
+             
                 // down
                 tempX = x;
                 tempY = y;
                 occupied = null;
                 while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
                     tempY -= 1;
-                    char valueX = (char)(tempX + 97);
-                    char valueY = (char)(Character.forDigit(tempY, 10));
+                    
                    occupied = board.scanPos(tempX, tempY, current, enemy);
-                   if ((occupied == null || !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
-                    current.getPieces().get(k).update(valueX, valueY);
+                   if (occupied == null  && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                    current.getPieces().get(k).update(tempX, tempY);
                         value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
                         if (value == false){
+                            //System.out.println(currentpos);
                             return value;
                         }
                     }
+                    else if ((occupied != null && !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                        if (occupied.getTeam() == enemy.getTeam().charAt(0)){
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
+                            current.getPieces().get(k).update(x,y);
+                            board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                            if (value == false){
+                                //System.out.println(currentpos);
+                                return value;
+                            }
+                        }
+
+                    }
                 }
-                current.getPieces().get(k).update(x, y);
+                
             }
            
-            else if (enemy.getPieces().get(k).getIdentifier().equals("Q")){// queen
+            else if (current.getPieces().get(k).getIdentifier().equals("Q")){// queen
                 // upleft
                 tempX = x;
                 tempY = y;
@@ -434,18 +669,32 @@ public class Board {
                 while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
                     tempX -= 1;
                     tempY += 1;
-                    char valueX = (char)(tempX + 97);
-                    char valueY = (char)(Character.forDigit(tempY, 10));
+                    
                    occupied = board.scanPos(tempX, tempY, current, enemy);
-                   if ((occupied == null || !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
-                    current.getPieces().get(k).update(valueX, valueY);
+                   if (occupied == null  && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                    current.getPieces().get(k).update(tempX, tempY);
                         value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
                         if (value == false){
+                            //System.out.println(currentpos);
                             return value;
                         }
                     }
+                    else if ((occupied != null && !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                        if (occupied.getTeam() == enemy.getTeam().charAt(0)){
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
+                            current.getPieces().get(k).update(x,y);
+                            board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                            if (value == false){
+                                //System.out.println(currentpos);
+                                return value;
+                            }
+                        }
+
+                    }
                 }
-                current.getPieces().get(k).update(x, y);   
+              
                 
                 // upright
                 tempX = x;
@@ -454,19 +703,33 @@ public class Board {
                 while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
                     tempX += 1;
                     tempY += 1;
-                    char valueX = (char)(tempX + 97);
-                    char valueY = (char)(Character.forDigit(tempY, 10));
+                    
                    occupied = board.scanPos(tempX, tempY, current, enemy);
-                   if ((occupied == null || !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
-                    current.getPieces().get(k).update(valueX, valueY);
+                   if (occupied == null  && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                    current.getPieces().get(k).update(tempX, tempY);
                         value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
                         if (value == false){
+                            //System.out.println(currentpos);
                             return value;
                         }
                     }
+                    else if ((occupied != null && !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                        if (occupied.getTeam() == enemy.getTeam().charAt(0)){
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
+                            current.getPieces().get(k).update(x,y);
+                            board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                            if (value == false){
+                                //System.out.println(currentpos);
+                                return value;
+                            }
+                        }
+
+                    }
                    
                 }
-                current.getPieces().get(k).update(x, y);
+              
                 // downleft
                 tempX = x;
                 tempY = y;
@@ -474,19 +737,33 @@ public class Board {
                 while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
                     tempX -= 1;
                     tempY -= 1;
-                    char valueX = (char)(tempX + 97);
-                    char valueY = (char)(Character.forDigit(tempY, 10));
+                    
                    occupied = board.scanPos(tempX, tempY, current, enemy);
-                   if ((occupied == null || !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
-                    current.getPieces().get(k).update(valueX, valueY);
-                    value = this.kingcheck(board, current, enemy);
-                    if (value == false){
-                        return value;
+                   if (occupied == null  && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                    current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        if (value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
                     }
-                  }
+                    else if ((occupied != null && !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                        if (occupied.getTeam() == enemy.getTeam().charAt(0)){
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
+                            current.getPieces().get(k).update(x,y);
+                            board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                            if (value == false){
+                                //System.out.println(currentpos);
+                                return value;
+                            }
+                        }
+
+                    }
                   
                 }
-                current.getPieces().get(k).update(x, y); 
+                
                 // downright
                 tempX = x;
                 tempY = y;
@@ -494,91 +771,160 @@ public class Board {
                 while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
                     tempX += 1;
                     tempY -= 1;
-                    char valueX = (char)(tempX + 97);
-                    char valueY = (char)(Character.forDigit(tempY, 10));
+                   
                    occupied = board.scanPos(tempX, tempY, current, enemy);
-                   if ((occupied == null || !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
-                    current.getPieces().get(k).update(valueX, valueY);
+                   if (occupied == null  && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                    current.getPieces().get(k).update(tempX, tempY);
                         value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
                         if (value == false){
+                            //System.out.println(currentpos);
                             return value;
                         }
+                    }
+                    else if ((occupied != null && !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                        if (occupied.getTeam() == enemy.getTeam().charAt(0)){
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
+                            current.getPieces().get(k).update(x,y);
+                            board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                            if (value == false){
+                                //System.out.println(currentpos);
+                                return value;
+                            }
+                        }
+
                     }  
                 }
-                current.getPieces().get(k).update(x, y); 
+               
                 //left
                 tempX = x;
                 tempY = y;
                 occupied = null;
                 while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
                     tempX -= 1;
-                    char valueX = (char)(tempX + 97);
-                    char valueY = (char)(Character.forDigit(tempY, 10));
+                    
                    occupied = board.scanPos(tempX, tempY, current, enemy);
-                   if ((occupied == null || !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
-                    current.getPieces().get(k).update(valueX, valueY);
+                   if (occupied == null  && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                    current.getPieces().get(k).update(tempX, tempY);
                         value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
                         if (value == false){
+                            //System.out.println(currentpos);
                             return value;
                         }
+                    }
+                    else if ((occupied != null && !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                        if (occupied.getTeam() == enemy.getTeam().charAt(0)){
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
+                            current.getPieces().get(k).update(x,y);
+                            board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                            if (value == false){
+                                //System.out.println(currentpos);
+                                return value;
+                            }
+                        }
+
                     }  
                 }
-                current.getPieces().get(k).update(x, y); 
+            
                 // up
                 tempX = x;
                 tempY = y;
                 occupied = null;
                 while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
                     tempY += 1;
-                    char valueX = (char)(tempX + 97);
-                    char valueY = (char)(Character.forDigit(tempY, 10));
+                    
                    occupied = board.scanPos(tempX, tempY, current, enemy);
-                   if ((occupied == null || !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
-                    current.getPieces().get(k).update(valueX, valueY);
+                   if (occupied == null  && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                    current.getPieces().get(k).update(tempX, tempY);
                         value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
                         if (value == false){
+                            //System.out.println(currentpos);
                             return value;
                         }
                     }
+                    else if ((occupied != null && !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                        if (occupied.getTeam() == enemy.getTeam().charAt(0)){
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
+                            current.getPieces().get(k).update(x,y);
+                            board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                            if (value == false){
+                                //System.out.println(currentpos);
+                                return value;
+                            }
+                        }
+
+                    }
                 }
-                current.getPieces().get(k).update(x, y); 
+                
                 // right
                 tempX = x;
                 tempY = y;
                 occupied = null;
                 while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
                     tempX += 1;
-                    char valueX = (char)(tempX + 97);
-                    char valueY = (char)(Character.forDigit(tempY, 10));
+                    
                    occupied = board.scanPos(tempX, tempY, current, enemy);
-                   if ((occupied == null || !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
-                    current.getPieces().get(k).update(valueX, valueY);
+                   if (occupied == null  && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                    current.getPieces().get(k).update(tempX, tempY);
                         value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
                         if (value == false){
+                            //System.out.println(currentpos);
                             return value;
                         }
+                    }
+                    else if ((occupied != null && !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                        if (occupied.getTeam() == enemy.getTeam().charAt(0)){
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
+                            current.getPieces().get(k).update(x,y);
+                            board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                            if (value == false){
+                                //System.out.println(currentpos);
+                                return value;
+                            }
+                        }
+
                     }   
                 }
-                current.getPieces().get(k).update(x, y);
+                
                 // down
                 tempX = x;
                 tempY = y;
                 occupied = null;
-                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0  && occupied == null){
+                while (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0){
                     tempY -= 1;
-                    char valueX = (char)(tempX + 97);
-                    char valueY = (char)(Character.forDigit(tempY, 10));
+
                    occupied = board.scanPos(tempX, tempY, current, enemy);
-                   if ((occupied == null || !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
-                    current.getPieces().get(k).update(valueX, valueY);
+                   if (occupied == null  && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                    current.getPieces().get(k).update(tempX, tempY);
                         value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
                         if (value == false){
+                            //System.out.println(currentpos);
                             return value;
                         }
                     }
-                  
+                    else if ((occupied != null && !(occupied.getIdentifier().equals("K"))) && (tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0)){
+                        if (occupied.getTeam() == enemy.getTeam().charAt(0)){
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
+                            current.getPieces().get(k).update(x,y);
+                            board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                            if (value == false){
+                                //System.out.println(currentpos);
+                                return value;
+                            }
+                        }
+
+                    }
                 }
-                current.getPieces().get(k).update(x, y);
+               
             }
             else if (current.getPieces().get(k).getIdentifier().equals("K")){// king
                 //left
@@ -587,16 +933,34 @@ public class Board {
                
                
                 tempX -= 1;
-                char valueX = (char)(tempX + 97);
-                char valueY = (char)(Character.forDigit(tempY, 10));
+                
                 
                 if ((tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
-                    current.getPieces().get(k).update(valueX, valueY);
-                    value = this.kingcheck(board, current, enemy);
-                    current.getPieces().get(k).update(x,y);
-                    if(value == false){
-                        return value;
+                    if (board.scanPos(tempX, tempY, current, enemy) != null){
+                        if (board.scanPos(x, y, current, enemy).getTeam() == enemy.getTeam().charAt(0)){
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
+                            current.getPieces().get(k).update(x,y);
+                            board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                            if (value == false){
+                                //System.out.println(currentpos);
+                                return value;
+                            }
+                           
+                        }
+
                     }
+                    else{
+                        current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        if(value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
+                    }
+                   
+                    
                 }
                    
                 // up
@@ -604,16 +968,34 @@ public class Board {
                 tempY = y;
                
                 tempY += 1;
-                valueX = (char)(tempX + 97);
-                valueY = (char)(Character.forDigit(tempY, 10));
+                
                 
                 if ((tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
-                    current.getPieces().get(k).update(tempX, tempY);
-                    value = this.kingcheck(board, current, enemy);
-                    current.getPieces().get(k).update(x,y);
-                    if(value == false){
-                        return value;
+                    if (board.scanPos(tempX, tempY, current, enemy) != null){
+                        if (board.scanPos(x, y, current, enemy).getTeam() == enemy.getTeam().charAt(0)){
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
+                            current.getPieces().get(k).update(x,y);
+                            board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                            if (value == false){
+                                //System.out.println(currentpos);
+                                return value;
+                            }
+                           
+                        }
+
                     }
+                    else{
+                        current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        if(value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
+                    }
+                   
+                    
                 }
 
                 // right
@@ -621,16 +1003,34 @@ public class Board {
                 tempY = y;
                
                 tempX += 1;
-                valueX = (char)(tempX + 97);
-                valueY = (char)(Character.forDigit(tempY, 10));
+              
                 
                 if ((tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
-                    current.getPieces().get(k).update(tempX, tempY);
-                    value = this.kingcheck(board, current, enemy);
-                    current.getPieces().get(k).update(x,y);
-                    if(value == false){
-                        return value;
+                    if (board.scanPos(tempX, tempY, current, enemy) != null){
+                        if (board.scanPos(x, y, current, enemy).getTeam() == enemy.getTeam().charAt(0)){
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
+                            current.getPieces().get(k).update(x,y);
+                            board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                            if (value == false){
+                                //System.out.println(currentpos);
+                                return value;
+                            }
+                           
+                        }
+
                     }
+                    else{
+                        current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        if(value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
+                    }
+                   
+                    
                 }
                     
                 // down
@@ -638,16 +1038,34 @@ public class Board {
                 tempY = y;
                 
                 tempY -= 1;
-                valueX = (char)(tempX + 97);
-                valueY = (char)(Character.forDigit(tempY, 10));
+               
             
                 if ((tempX != -1 && tempX != 8 && tempY != 9 && tempY != 0 )){
-                    current.getPieces().get(k).update(tempX, tempY);
-                    value = this.kingcheck(board, current, enemy);
-                    current.getPieces().get(k).update(x,y);
-                    if(value == false){
-                        return value;
+                    if (board.scanPos(tempX, tempY, current, enemy) != null){
+                        if (board.scanPos(x, y, current, enemy).getTeam() == enemy.getTeam().charAt(0)){
+                            current.take(""+(char)(x + 97) + Character.forDigit(y, 10), ""+(char)(tempX + 97) + Character.forDigit(tempY, 10), current, enemy, board, 0);
+                            value = kingcheck(board, current, enemy);
+                            current.getPieces().get(k).update(x,y);
+                            board.scanPos(x, y, current, enemy).update(tempX, tempY);
+                            if (value == false){
+                                //System.out.println(currentpos);
+                                return value;
+                            }
+                           
+                        }
+
                     }
+                    else{
+                        current.getPieces().get(k).update(tempX, tempY);
+                        value = this.kingcheck(board, current, enemy);
+                        current.getPieces().get(k).update(x,y);
+                        if(value == false){
+                            //System.out.println(currentpos);
+                            return value;
+                        }
+                    }
+                   
+                    
                 }
             }
         
@@ -1083,6 +1501,7 @@ public class Board {
                     checkPos.add(""+valueX+valueY);
             }
         }
+        
         String currentKing = "";
         for (int i = 0; i < current.getPieces().size(); i++){
             if (current.getPieces().get(i).getIdentifier() == "K"){

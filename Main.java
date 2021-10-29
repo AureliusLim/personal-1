@@ -23,7 +23,7 @@ class Main{
             if (turn == 1){
                 if (board.kingcheck(board, white, black) == true){
                     System.out.println("Check!");
-                    System.out.println((board.kingmate(board, white, black)));
+                    //System.out.println((board.kingmate(board, white, black)));
                     if (board.kingmate(board, white, black) == true){
                         winner = "Black";
                         break;
@@ -34,7 +34,7 @@ class Main{
             else{
                 if (board.kingcheck(board, black, white) == true){
                     System.out.println("Check!");
-                    System.out.println((board.kingmate(board, white, black)));
+                    //System.out.println((board.kingmate(board, black, white)));
                     if (board.kingmate(board,black, white) == true){
                         winner = "White";
                         break;
@@ -60,10 +60,10 @@ class Main{
                 if(board.scanPos(nextPos,white,black) != null && !parseTurn(turn,board.scanPos(nextPos,white,black).getTeam())){ // if player intends to eat piece
                     if(turn == 1){
                        
-                         valid = white.take(current, nextPos, white, black, board);
+                         valid = white.take(current, nextPos, white, black, board, 1);
                     }
                     else{
-                        valid = black.take(current,nextPos,black, white, board);
+                        valid = black.take(current,nextPos,black, white, board, 1);
                     }
                 }
                 else{ // if player intends to move piece

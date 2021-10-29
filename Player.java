@@ -17,18 +17,22 @@ abstract class Player{
     public String getTeam(){
         return this.team;
     }
-    public void delPiece(Piece removed){
-       
-        this.pieces.remove(removed);
+    public void delPiece(Piece removed, int mode){
+        if (mode == 1){
+            this.pieces.remove(removed);
+        }
+        else{
+            removed.update(50, 50);
+        }
         
     }
-    public boolean take(String old, String next, Player current, Player enemy, Board board){
+    public boolean take(String old, String next, Player current, Player enemy, Board board, int mode){
         
         Piece taken =  board.scanPos(next, current, enemy);
         boolean res = this.play(old,next, current, enemy, board);
         System.out.println(res);
         if(res){
-            enemy.delPiece(taken);
+            enemy.delPiece(taken, mode);
            
             return true;
         }
